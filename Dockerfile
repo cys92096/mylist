@@ -35,4 +35,4 @@ EXPOSE 5244
 
 # 启动命令（将数据目录通过参数指向我们创建的 data 文件夹）
 ENTRYPOINT ["./openlist"]
-CMD ["server", "--no-prefix", "--data", "/opt/openlist/data"]
+CMD ["server", "--no-prefix", "--data", "/data"]
