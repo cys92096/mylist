@@ -1,0 +1,61 @@
+name: Build and Push Docker Image to GHCR
+
+on:
+  push:
+    branches: [ "main" ] # 当 main 分支有代码推送时触发构建
+  workflow_dispatch:      # 允许你在 GitHub 页面上点击按钮手动触发构建
+
+env:
+  REGISTRY: ghcr.io
+  # 镜像名字会自动变成：ghcr.io/你的用户名/你的仓库名:latest
+  IMAGE_NAME: ${{ github.repository }} 
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # 必须赋予写入 Packages 的权限
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 1. 设置 QEMU 并在需要时支持多架构（可选，但推荐）
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      # 2. 设置 Buildx（Docker 官方推荐的现代化构建工具）
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 3. 登录到 GitHub Container Registry (GHCR)
+      # 这里使用 GitHub 自动生成的临时密码，无需手动配置 Secret
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 4. 提取元数据（自动生成标签，如 latest）
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+
+      # 5. 构建并推送镜像
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ id.meta.outputs.tags }}
+          labels: ${{ id.meta.outputs.labels }}
+          # 开启缓存，能让后续的构建速度提升数倍
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
