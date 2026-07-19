@@ -2,12 +2,12 @@ name: Build and Push Docker Image to GHCR
 
 on:
   push:
-    branches: [ "test-aria2" ] # <-- 关键改动：现在只有向 test-aria2 分支推送代码才会触发构建
-  workflow_dispatch:          # 依然保留手动触发按钮
+    branches: [ "test-aria2" ] 
+  workflow_dispatch:         
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }} 
+  IMAGE_NAME: ${{ github.repository }}-aria2
 
 jobs:
   build-and-push:
@@ -42,7 +42,7 @@ jobs:
             type=raw,value=latest
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v6    # <-- 已经保持最新，无 Node 警告
+        uses: docker/build-push-action@v6   
         with:
           context: .
           file: ./Dockerfile
