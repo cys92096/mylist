@@ -33,6 +33,6 @@ RUN mkdir -p /opt/openlist/data
 
 EXPOSE 5244
 
-# 启动命令（修改最后一行的 CMD，将 --data 参数指向 HF 的官方挂载点 /data）
+# 启动命令（将数据目录通过参数指向我们创建的 data 文件夹）
 ENTRYPOINT ["./openlist"]
-CMD ["server", "--no-prefix", "--data", "/data"]
+CMD ["server", "--no-prefix", "--data", "/opt/openlist/data"]
