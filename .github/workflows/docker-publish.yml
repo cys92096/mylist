@@ -2,13 +2,13 @@ name: Build and Push Docker Image to GHCR
 
 on:
   push:
-    branches: [ "main" ] # 当 main 分支有代码推送时触发构建
+    branches: [ "mylist-hf" ] # 当 main 分支有代码推送时触发构建
   workflow_dispatch:      # 允许你在 GitHub 页面上点击按钮手动触发构建
 
 env:
   REGISTRY: ghcr.io
   # 镜像名字会自动变成：ghcr.io/你的用户名/你的仓库名:latest
-  IMAGE_NAME: ${{ github.repository }} 
+  IMAGE_NAME: ${{ github.repository }}-hf 
 
 jobs:
   build-and-push:
