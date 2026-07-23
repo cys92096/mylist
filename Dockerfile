@@ -19,4 +19,4 @@ COPY --from=fetcher /tmp/openlist /opt/openlist/openlist
 RUN mkdir -p /opt/openlist/data /opt/openlist/downloads /opt/openlist/data/temp/aria2 && \
     chmod 777 /opt/openlist/downloads /opt/openlist/data/temp/aria2
 EXPOSE 5244 6800
-CMD ["sh", "-c", "aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all=true --rpc-secret=123 --dir=/opt/openlist/downloads --daemon=true && sleep 3 && ./openlist server --no-prefix --data /opt/openlist/data"]
+CMD ["sh", "-c", "aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all=true --rpc-secret=123 --dir=/opt/openlist/downloads --daemon=true --no-conf=true && sleep 3 && ./openlist server --no-prefix --data /opt/openlist/data"]
