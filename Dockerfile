@@ -31,7 +31,9 @@ COPY --from=fetcher /tmp/openlist /opt/openlist/openlist
 # 在当前目录下创建独立的 data 和 downloads 目录，方便统一挂载
 RUN mkdir -p /opt/openlist/data /opt/openlist/downloads && \
     chmod 777 /opt/openlist/downloads
-
+RUN mkdir -p /opt/openlist/data/temp/aria2 && \
+    chmod 777 /opt/openlist/data/temp/aria2
+    
 EXPOSE 5244
 
 # 启动命令：
